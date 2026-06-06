@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>瑞丰利 极简工业风产品海报</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #0b0c10;
+            color: #f5f5f7;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro SC", "PingFang SC", "SF Pro Display", "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .poster {
+            width: 1000px;
+            height: 1500px;
+            background: radial-gradient(circle at 50% 50%, #171923 0%, #08090d 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        /* Engineering blueprint grid background */
+        .poster::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(rgba(184, 151, 90, 0.01) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(184, 151, 90, 0.01) 2px, transparent 2px);
+            background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Border box with technical corner brackets */
+        .inner-border {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            right: 40px;
+            bottom: 40px;
+            border: 1px solid rgba(184, 151, 90, 0.15);
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        .corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            z-index: 3;
+        }
+        .top-left {
+            top: 35px;
+            left: 35px;
+            border-top: 3px solid #b8975a;
+            border-left: 3px solid #b8975a;
+        }
+        .top-right {
+            top: 35px;
+            right: 35px;
+            border-top: 3px solid #b8975a;
+            border-right: 3px solid #b8975a;
+        }
+        .bottom-left {
+            bottom: 35px;
+            left: 35px;
+            border-bottom: 3px solid #b8975a;
+            border-left: 3px solid #b8975a;
+        }
+        .bottom-right {
+            bottom: 35px;
+            right: 35px;
+            border-bottom: 3px solid #b8975a;
+            border-right: 3px solid #b8975a;
+        }
+
+        /* Content Layout */
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            z-index: 10;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.4);
+            font-family: "Courier New", Courier, monospace;
+            padding: 20px 20px 0 20px;
+        }
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .header-right {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .accent-text {
+            color: #b8975a;
+            font-weight: bold;
+        }
+
+        /* Brand Title */
+        .brand-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
+            margin-top: 30px;
+        }
+        .brand-title {
+            font-size: 72px;
+            font-weight: 900;
+            letter-spacing: 18px;
+            color: #ffffff;
+            text-indent: 18px; /* centering fix for letter-spacing */
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(180deg, #ffffff 30%, #cccccc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand-subtitle {
+            font-size: 14px;
+            letter-spacing: 12px;
+            text-indent: 12px;
+            color: #b8975a;
+            margin-top: 15px;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        .brand-desc {
+            font-size: 12px;
+            letter-spacing: 5px;
+            text-indent: 5px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 12px;
+            font-weight: 300;
+        }
+        .brand-divider {
+            width: 80px;
+            height: 1px;
+            background-color: rgba(184, 151, 90, 0.3);
+            margin-top: 20px;
+            position: relative;
+        }
+        .brand-divider::after {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: 37px;
+            width: 5px;
+            height: 5px;
+            background-color: #b8975a;
+            transform: rotate(45deg);
+        }
+
+        /* Center Visual Schematic */
+        .visual-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            height: 600px;
+        }
+        
+        /* Schematic HUD Circle */
+        .schematic-svg {
+            width: 520px;
+            height: 520px;
+        }
+        
+        /* Info Highlight grid */
+        .info-grid {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 10;
+            margin-bottom: 30px;
+        }
+        .info-card {
+            width: 250px;
+            border-left: 1px solid rgba(184, 151, 90, 0.3);
+            padding-left: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .info-num {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 14px;
+            color: #b8975a;
+            font-weight: bold;
+        }
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #f5f5f7;
+        }
+        .info-text {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.6;
+            letter-spacing: 1px;
+        }
+
+        /* Footer */
+        .footer {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 10;
+            padding: 0 20px 20px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 25px;
+        }
+        .footer-left {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 10px;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.3);
+            line-height: 1.5;
+        }
+        .footer-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+        
+        /* Technical Barcode */
+        .barcode-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        .barcode {
+            display: flex;
+            height: 35px;
+            align-items: stretch;
+            background-color: transparent;
+        }
+        .bar {
+            background-color: rgba(255, 255, 255, 0.75);
+            margin-right: 1px;
+        }
+        .bar.w1 { width: 1px; }
+        .bar.w2 { width: 2px; }
+        .bar.w3 { width: 3px; }
+        .bar.w4 { width: 4px; }
+        .bar.w5 { width: 5px; }
+        .bar.space-s { margin-right: 2px; }
+        .bar.space-m { margin-right: 4px; }
+        .bar.space-l { margin-right: 6px; }
+        .barcode-label {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 9px;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <!-- Inner Border for technical framing -->
+        <div class="inner-border"></div>
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <span>RUFENGLI ® / DESIGN STUDIO</span>
+                <span>SYSTEM ID: <span class="accent-text">RFL-990-2026</span></span>
+            </div>
+            <div class="header-right">
+                <span>PROJECT // INDUSTRIAL ART</span>
+                <span>COORD // <span class="accent-text">31°13'N 121°28'E</span></span>
+            </div>
+        </div>
+
+        <!-- Brand Title -->
+        <div class="brand-section">
+            <h1 class="brand-title">瑞丰利</h1>
+            <div class="brand-subtitle">RUFENGLI PRECISION</div>
+            <div class="brand-desc">重塑工业之美 · 质感而生</div>
+            <div class="brand-divider"></div>
+        </div>
+
+        <!-- Central Mechanical Visual (SVG blueprint) -->
+        <div class="visual-container">
+            <svg class="schematic-svg" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer dashed measurement ring -->
+                <circle cx="250" cy="250" r="210" stroke="rgba(184, 151, 90, 0.15)" stroke-width="1" stroke-dasharray="3 3"/>
+                <circle cx="250" cy="250" r="200" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+                
+                <!-- Coordinate crosshairs -->
+                <line x1="250" y1="20" x2="250" y2="480" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1" stroke-dasharray="10 5"/>
+                <line x1="20" y1="250" x2="480" y2="250" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1" stroke-dasharray="10 5"/>
+                
+                <!-- Main industrial golden gear / ring outline -->
+                <circle cx="250" cy="250" r="160" stroke="#b8975a" stroke-width="1.5" stroke-opacity="0.8"/>
+                <circle cx="250" cy="250" r="145" stroke="rgba(184, 151, 90, 0.3)" stroke-width="1"/>
+                
+                <!-- Inner technical ring with block patterns (simulating caliper details) -->
+                <circle cx="250" cy="250" r="120" stroke="rgba(255, 255, 255, 0.2)" stroke-width="6" stroke-dasharray="1 15 2 8 1 20"/>
+                
+                <!-- Center mechanical capsule -->
+                <circle cx="250" cy="250" r="80" stroke="rgba(184, 151, 90, 0.4)" stroke-width="2"/>
+                <circle cx="250" cy="250" r="70" fill="rgba(184, 151, 90, 0.05)" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+                
+                <!-- Intersecting aesthetic construction lines (golden ratio lines) -->
+                <circle cx="170" cy="170" r="90" stroke="rgba(255, 255, 255, 0.04)" stroke-width="1"/>
+                <circle cx="330" cy="330" r="90" stroke="rgba(255, 255, 255, 0.04)" stroke-width="1"/>
+                <circle cx="250" cy="250" r="50" stroke="#b8975a" stroke-width="1" stroke-dasharray="5 3"/>
+                
+                <!-- Core element: glowing mechanical golden diamond/hexagon -->
+                <path d="M250 215 L280 250 L250 285 L220 250 Z" stroke="#b8975a" stroke-width="2" fill="rgba(184, 151, 90, 0.15)"/>
+                <circle cx="250" cy="250" r="12" fill="#b8975a" filter="drop-shadow(0px 0px 8px rgba(184, 151, 90, 0.8))"/>
+                
+                <!-- Tangent lines representing engineering calculations -->
+                <line x1="90" y1="250" x2="250" y2="90" stroke="rgba(184, 151, 90, 0.25)" stroke-width="1"/>
+                <line x1="410" y1="250" x2="250" y2="410" stroke="rgba(184, 151, 90, 0.25)" stroke-width="1"/>
+                <line x1="90" y1="250" x2="250" y2="410" stroke="rgba(184, 151, 90, 0.25)" stroke-width="1"/>
+                <line x1="410" y1="250" x2="250" y2="90" stroke="rgba(184, 151, 90, 0.25)" stroke-width="1"/>
+                
+                <!-- Angle indicators & measurement markings -->
+                <path d="M250 40 A210 210 0 0 1 355 68" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1.5"/>
+                <text x="365" y="65" fill="rgba(255, 255, 255, 0.6)" font-family="monospace" font-size="9" letter-spacing="1">RFL_ANGLE 45°</text>
+                
+                <path d="M250 460 A210 210 0 0 1 145 432" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1.5"/>
+                <text x="75" y="445" fill="rgba(255, 255, 255, 0.6)" font-family="monospace" font-size="9" letter-spacing="1">LIMIT: +/-0.001</text>
+                
+                <!-- Little data blocks/labels in the corners of SVG -->
+                <rect x="50" y="50" width="80" height="20" rx="2" fill="rgba(255, 255, 255, 0.02)" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+                <text x="58" y="63" fill="rgba(255, 255, 255, 0.5)" font-family="monospace" font-size="8" letter-spacing="1">SCALE 1:1.5</text>
+                
+                <rect x="370" y="430" width="80" height="20" rx="2" fill="rgba(255, 255, 255, 0.02)" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+                <text x="378" y="443" fill="#b8975a" font-family="monospace" font-size="8" letter-spacing="1">STATE: ACTIVE</text>
+            </svg>
+        </div>
+
+        <!-- Highlight Specifications / Info Grid -->
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-num">01 / CONCEPT</div>
+                <div class="info-title">极简主义</div>
+                <div class="info-text">褪去繁琐装饰，回归本质几何之美。瑞丰利致力于用最纯粹的线条，勾勒出极具工业力量感的产品美学。</div>
+            </div>
+            <div class="info-card">
+                <div class="info-num">02 / CRAFT</div>
+                <div class="info-title">极致工艺</div>
+                <div class="info-text">对每一微米的苛求，对每一道纹理的精雕细琢。以严苛的工业标准，将坚韧的材质打造成跨越时代的艺术臻品。</div>
+            </div>
+            <div class="info-card">
+                <div class="info-num">03 / FUTURE</div>
+                <div class="info-title">智造未来</div>
+                <div class="info-text">在数字化与工业文明的交汇处，以科技赋能传统制造。不仅是工具与配件，更是未来工业美学的探索先锋。</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-left">
+                <div>RUFENGLI PRODUCTS CO., LTD. ALL RIGHTS RESERVED.</div>
+                <div>POWERED BY DESIGN SYSTEM 2.0 // OBSIDIAN GOLD EDITION</div>
+            </div>
+            <div class="footer-right">
+                <div class="barcode-container">
+                    <div class="barcode">
+                        <div class="bar w1 space-s"></div>
+                        <div class="bar w3 space-s"></div>
+                        <div class="bar w2 space-m"></div>
+                        <div class="bar w4 space-s"></div>
+                        <div class="bar w1 space-l"></div>
+                        <div class="bar w2 space-s"></div>
+                        <div class="bar w5 space-s"></div>
+                        <div class="bar w1 space-m"></div>
+                        <div class="bar w3 space-s"></div>
+                        <div class="bar w2 space-s"></div>
+                        <div class="bar w4"></div>
+                    </div>
+                    <div class="barcode-label">RUFENGLI-2026</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
