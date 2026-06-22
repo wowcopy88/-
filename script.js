@@ -94,9 +94,9 @@ function createPiece(type) {
 function refillBag() {
   const types = Object.keys(SHAPES);
 
-  for (let index = types.length - 1; index > 0; index -= 1) {
-    const randomIndex = Math.floor(Math.random() * (index + 1));
-    [types[index], types[randomIndex]] = [types[randomIndex], types[index]];
+  for (let currentIndex = types.length - 1; currentIndex > 0; currentIndex -= 1) {
+    const randomIndex = Math.floor(Math.random() * (currentIndex + 1));
+    [types[currentIndex], types[randomIndex]] = [types[randomIndex], types[currentIndex]];
   }
 
   state.bag = types.map((type) => createPiece(type));
@@ -281,7 +281,7 @@ function drawCell(ctx, x, y, color, size = 1) {
   ctx.strokeRect(x, y, size, size);
 }
 
-function drawMatrix(ctx, matrix, offset, type, preview = false) {
+function drawMatrix(ctx, matrix, offset, type) {
   matrix.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value) {
@@ -295,11 +295,6 @@ function drawMatrix(ctx, matrix, offset, type, preview = false) {
       }
     });
   });
-
-  if (preview) {
-    ctx.strokeStyle = "rgba(148, 163, 184, 0.18)";
-    ctx.lineWidth = 1;
-  }
 }
 
 function drawBoardGrid() {
@@ -352,7 +347,7 @@ function drawNextPiece() {
     y: (5 - matrix.length) / 2,
   };
 
-  drawMatrix(nextContext, matrix, offset, state.nextPiece.type, true);
+  drawMatrix(nextContext, matrix, offset, state.nextPiece.type);
 }
 
 function updateStats() {
