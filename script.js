@@ -3,6 +3,9 @@ const ROWS = 20;
 const BLOCK_SIZE = 30;
 const PREVIEW_BLOCK_SIZE = 24;
 const SCORE_TABLE = [0, 100, 300, 500, 800];
+const START_DROP_INTERVAL = 700;
+const MIN_DROP_INTERVAL = 120;
+const LEVEL_SPEED_STEP = 55;
 
 const SHAPES = {
   I: [[1, 1, 1, 1]],
@@ -65,7 +68,7 @@ const state = {
   level: 1,
   dropCounter: 0,
   lastTime: 0,
-  dropInterval: 700,
+  dropInterval: START_DROP_INTERVAL,
   isRunning: false,
   isPaused: false,
   isGameOver: false,
@@ -84,9 +87,14 @@ function createPiece(type) {
 }
 
 function refillBag() {
-  state.bag = Object.keys(SHAPES)
-    .sort(() => Math.random() - 0.5)
-    .map((type) => createPiece(type));
+  const types = Object.keys(SHAPES);
+
+  for (let index = types.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [types[index], types[randomIndex]] = [types[randomIndex], types[index]];
+  }
+
+  state.bag = types.map((type) => createPiece(type));
 }
 
 function getNextPiece() {
@@ -102,7 +110,7 @@ function resetBoard() {
   state.score = 0;
   state.lines = 0;
   state.level = 1;
-  state.dropInterval = 700;
+  state.dropInterval = START_DROP_INTERVAL;
   state.dropCounter = 0;
   state.lastTime = 0;
   state.isRunning = true;
@@ -124,7 +132,7 @@ function spawnPlayer() {
   if (collide(state.board, state.player)) {
     state.isGameOver = true;
     state.isRunning = false;
-    setOverlay("游戏结束<br>按 R 或点击“重新开始”再来一局", true);
+    setOverlay("游戏结束\n按 R 或点击“重新开始”再来一局", true);
   }
 
   drawNextPiece();
@@ -178,7 +186,10 @@ function clearLines() {
   if (cleared > 0) {
     state.lines += cleared;
     state.level = Math.floor(state.lines / 10) + 1;
-    state.dropInterval = Math.max(120, 700 - (state.level - 1) * 55);
+    state.dropInterval = Math.max(
+      MIN_DROP_INTERVAL,
+      START_DROP_INTERVAL - (state.level - 1) * LEVEL_SPEED_STEP,
+    );
     state.score += SCORE_TABLE[cleared] * state.level;
     updateStats();
   }
@@ -241,17 +252,19 @@ function playerRotate() {
 
   const originalMatrix = state.player.matrix.map((row) => [...row]);
   const originalX = state.player.pos.x;
-  let offset = 1;
+  const kickOffsets = [1, -2, 3, -4];
+  let kickIndex = 0;
   state.player.matrix = rotateMatrix(state.player.matrix);
 
   while (collide(state.board, state.player)) {
-    state.player.pos.x += offset;
-    offset = -(offset + (offset > 0 ? 1 : -1));
-    if (Math.abs(offset) > state.player.matrix[0].length) {
+    if (kickIndex >= kickOffsets.length) {
       state.player.matrix = originalMatrix;
       state.player.pos.x = originalX;
       return;
     }
+
+    state.player.pos.x += kickOffsets[kickIndex];
+    kickIndex += 1;
   }
 }
 
@@ -345,7 +358,7 @@ function updateStats() {
 }
 
 function setOverlay(message, visible = false) {
-  overlay.innerHTML = message;
+  overlay.textContent = message;
   overlay.classList.toggle("show", visible || Boolean(message));
 }
 
@@ -361,7 +374,7 @@ function togglePause() {
   }
 
   state.isPaused = !state.isPaused;
-  setOverlay(state.isPaused ? "已暂停<br>按 P 继续游戏" : "", state.isPaused);
+  setOverlay(state.isPaused ? "已暂停\n按 P 继续游戏" : "", state.isPaused);
 }
 
 function handleAction(action) {
