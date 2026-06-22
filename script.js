@@ -4,9 +4,11 @@ const BLOCK_SIZE = 30;
 const PREVIEW_BLOCK_SIZE = 24;
 // 按单次同时消除 0-4 行计算的基础分值。
 const LINE_CLEAR_BASE_SCORES = [0, 100, 300, 500, 800];
+const MAX_LINES_PER_CLEAR = 4;
 const START_DROP_INTERVAL = 700;
 const MIN_DROP_INTERVAL = 120;
 const LEVEL_SPEED_STEP = 55;
+const ROTATION_KICK_OFFSETS = [0, 1, -1, 2, -2];
 
 const SHAPES = {
   I: [[1, 1, 1, 1]],
@@ -57,7 +59,9 @@ const levelElement = document.getElementById("level");
 const restartButton = document.getElementById("restartButton");
 const touchControls = document.querySelector(".touch-controls");
 
+// 统一按网格单位绘制，避免手动换算像素坐标。
 context.scale(BLOCK_SIZE, BLOCK_SIZE);
+nextContext.setTransform(PREVIEW_BLOCK_SIZE, 0, 0, PREVIEW_BLOCK_SIZE, 0, 0);
 
 const state = {
   board: createMatrix(COLS, ROWS),
@@ -191,10 +195,8 @@ function clearLines() {
       MIN_DROP_INTERVAL,
       START_DROP_INTERVAL - (state.level - 1) * LEVEL_SPEED_STEP,
     );
-    state.score +=
-      LINE_CLEAR_BASE_SCORES[
-        Math.min(cleared, LINE_CLEAR_BASE_SCORES.length - 1)
-      ] * state.level;
+    const scoringLines = Math.min(cleared, MAX_LINES_PER_CLEAR);
+    state.score += LINE_CLEAR_BASE_SCORES[scoringLines] * state.level;
     updateStats();
   }
 }
@@ -256,19 +258,17 @@ function playerRotate() {
 
   const originalMatrix = state.player.matrix.map((row) => [...row]);
   const originalX = state.player.pos.x;
-  // 旋转后依次尝试原位、右一格、左一格、右两格、左两格。
-  const rotationKickOffsets = [0, 1, -1, 2, -2];
   let kickIndex = 0;
   state.player.matrix = rotateMatrix(state.player.matrix);
 
   while (collide(state.board, state.player)) {
-    if (kickIndex >= rotationKickOffsets.length) {
+    if (kickIndex >= ROTATION_KICK_OFFSETS.length) {
       state.player.matrix = originalMatrix;
       state.player.pos.x = originalX;
       return;
     }
 
-    state.player.pos.x = originalX + rotationKickOffsets[kickIndex];
+    state.player.pos.x = originalX + ROTATION_KICK_OFFSETS[kickIndex];
     kickIndex += 1;
   }
 }
@@ -338,7 +338,6 @@ function draw() {
 }
 
 function drawNextPiece() {
-  nextContext.setTransform(PREVIEW_BLOCK_SIZE, 0, 0, PREVIEW_BLOCK_SIZE, 0, 0);
   nextContext.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
   nextContext.fillStyle = "#020617";
   nextContext.fillRect(0, 0, 5, 5);
@@ -431,7 +430,9 @@ function update(time = 0) {
 }
 
 document.addEventListener("keydown", (event) => {
-  if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Space"].includes(event.code)) {
+  if (
+    ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Space", "KeyP", "KeyR"].includes(event.code)
+  ) {
     event.preventDefault();
   }
 
