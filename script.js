@@ -2,7 +2,8 @@ const COLS = 10;
 const ROWS = 20;
 const BLOCK_SIZE = 30;
 const PREVIEW_BLOCK_SIZE = 24;
-const SCORE_TABLE = [0, 100, 300, 500, 800];
+// 按单次同时消除 0-4 行计算的基础分值。
+const LINE_CLEAR_BASE_SCORES = [0, 100, 300, 500, 800];
 const START_DROP_INTERVAL = 700;
 const MIN_DROP_INTERVAL = 120;
 const LEVEL_SPEED_STEP = 55;
@@ -190,7 +191,7 @@ function clearLines() {
       MIN_DROP_INTERVAL,
       START_DROP_INTERVAL - (state.level - 1) * LEVEL_SPEED_STEP,
     );
-    state.score += SCORE_TABLE[cleared] * state.level;
+    state.score += LINE_CLEAR_BASE_SCORES[cleared] * state.level;
     updateStats();
   }
 }
@@ -252,18 +253,19 @@ function playerRotate() {
 
   const originalMatrix = state.player.matrix.map((row) => [...row]);
   const originalX = state.player.pos.x;
-  const kickOffsets = [1, -2, 3, -4];
+  // 旋转碰撞后，依次尝试左右平移，给方块留出贴墙旋转空间。
+  const rotationKickOffsets = [1, -2, 3, -4];
   let kickIndex = 0;
   state.player.matrix = rotateMatrix(state.player.matrix);
 
   while (collide(state.board, state.player)) {
-    if (kickIndex >= kickOffsets.length) {
+    if (kickIndex >= rotationKickOffsets.length) {
       state.player.matrix = originalMatrix;
       state.player.pos.x = originalX;
       return;
     }
 
-    state.player.pos.x += kickOffsets[kickIndex];
+    state.player.pos.x += rotationKickOffsets[kickIndex];
     kickIndex += 1;
   }
 }
