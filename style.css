@@ -54,6 +54,13 @@ body {
   margin-bottom: 24px;
 }
 
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
 .eyebrow {
   margin: 0 0 8px;
   color: var(--accent);
@@ -71,6 +78,7 @@ h1 {
 }
 
 .primary-button,
+.secondary-button,
 .touch-controls button {
   border: none;
   border-radius: 14px;
@@ -86,12 +94,21 @@ h1 {
   padding: 12px 18px;
 }
 
+.secondary-button {
+  background: rgba(30, 41, 59, 0.95);
+  color: var(--text);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  padding: 12px 18px;
+}
+
 .primary-button:hover,
+.secondary-button:hover,
 .touch-controls button:hover {
   transform: translateY(-1px);
 }
 
 .primary-button:active,
+.secondary-button:active,
 .touch-controls button:active {
   transform: translateY(1px);
 }
@@ -242,6 +259,15 @@ h1 {
   .header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .header-actions button {
+    flex: 1 1 0;
   }
 
   .sidebar {
