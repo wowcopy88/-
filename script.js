@@ -191,7 +191,10 @@ function clearLines() {
       MIN_DROP_INTERVAL,
       START_DROP_INTERVAL - (state.level - 1) * LEVEL_SPEED_STEP,
     );
-    state.score += LINE_CLEAR_BASE_SCORES[cleared] * state.level;
+    state.score +=
+      LINE_CLEAR_BASE_SCORES[
+        Math.min(cleared, LINE_CLEAR_BASE_SCORES.length - 1)
+      ] * state.level;
     updateStats();
   }
 }
@@ -253,8 +256,8 @@ function playerRotate() {
 
   const originalMatrix = state.player.matrix.map((row) => [...row]);
   const originalX = state.player.pos.x;
-  // 旋转碰撞后，依次尝试左右平移，给方块留出贴墙旋转空间。
-  const rotationKickOffsets = [1, -2, 3, -4];
+  // 旋转后依次尝试原位、右一格、左一格、右两格、左两格。
+  const rotationKickOffsets = [0, 1, -1, 2, -2];
   let kickIndex = 0;
   state.player.matrix = rotateMatrix(state.player.matrix);
 
@@ -265,7 +268,7 @@ function playerRotate() {
       return;
     }
 
-    state.player.pos.x += rotationKickOffsets[kickIndex];
+    state.player.pos.x = originalX + rotationKickOffsets[kickIndex];
     kickIndex += 1;
   }
 }
