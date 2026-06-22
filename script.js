@@ -9,6 +9,12 @@ const START_DROP_INTERVAL = 700;
 const MIN_DROP_INTERVAL = 120;
 const LEVEL_SPEED_STEP = 55;
 const ROTATION_KICK_OFFSETS = [0, 1, -1, 2, -2];
+const MASTER_GAIN_VOLUME = 0.24;
+const BEAT_INTERVAL_MS = 340;
+const AUDIO_LABELS = {
+  on: "声音：开",
+  off: "声音：关",
+};
 
 const SHAPES = {
   I: [[1, 1, 1, 1]],
@@ -103,7 +109,7 @@ const MUSIC_SEQUENCE = [
 ];
 
 function updateAudioButton() {
-  const buttonText = audioState.enabled ? "声音：开" : "声音：关";
+  const buttonText = audioState.enabled ? AUDIO_LABELS.on : AUDIO_LABELS.off;
   audioToggleButton.textContent = buttonText;
   audioToggleButton.setAttribute("aria-pressed", String(audioState.enabled));
 }
@@ -118,7 +124,7 @@ function initializeAudio() {
   const musicGain = contextInstance.createGain();
   const effectGain = contextInstance.createGain();
 
-  masterGain.gain.value = 0.24;
+  masterGain.gain.value = MASTER_GAIN_VOLUME;
   musicGain.gain.value = 0.11;
   effectGain.gain.value = 0.18;
 
@@ -231,7 +237,7 @@ function queueMusicBeat() {
   });
 
   audioState.beatIndex += 1;
-  audioState.musicTimer = window.setTimeout(queueMusicBeat, 340);
+  audioState.musicTimer = window.setTimeout(queueMusicBeat, BEAT_INTERVAL_MS);
 }
 
 function updateAudioPlayback() {
@@ -310,7 +316,10 @@ async function setAudioEnabled(enabled) {
 
   audioState.masterGain.gain.cancelScheduledValues(audioState.context.currentTime);
   audioState.masterGain.gain.setValueAtTime(0, audioState.context.currentTime);
-  audioState.masterGain.gain.linearRampToValueAtTime(0.24, audioState.context.currentTime + 0.18);
+  audioState.masterGain.gain.linearRampToValueAtTime(
+    MASTER_GAIN_VOLUME,
+    audioState.context.currentTime + 0.18,
+  );
   playEffect(state.isRunning && !state.isPaused ? "resume" : "start");
 }
 
