@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>俄罗斯方块</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="app">
+    <section class="panel">
+      <div class="header">
+        <div>
+          <p class="eyebrow">经典小游戏</p>
+          <h1>俄罗斯方块</h1>
+        </div>
+        <div class="header-actions">
+          <button id="audioToggleButton" class="secondary-button" type="button" aria-pressed="false">
+            声音：关
+          </button>
+          <button id="restartButton" class="primary-button" type="button">重新开始</button>
+        </div>
+      </div>
+
+      <div class="game-shell">
+        <div class="board-wrap">
+          <canvas id="game" width="300" height="600" aria-label="俄罗斯方块游戏画布"></canvas>
+          <div id="overlay" class="overlay">按任意方向键开始</div>
+        </div>
+
+        <aside class="sidebar">
+          <div class="stat-card">
+            <span>分数</span>
+            <strong id="score">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>消除行数</span>
+            <strong id="lines">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>等级</span>
+            <strong id="level">1</strong>
+          </div>
+          <div class="stat-card next-piece-card">
+            <span>下一个</span>
+            <canvas id="next" width="120" height="120" aria-label="下一个方块预览"></canvas>
+          </div>
+
+          <div class="info-card">
+            <h2>键盘操作</h2>
+            <ul>
+              <li>← / →：移动</li>
+              <li>↑：旋转</li>
+              <li>↓：加速下落</li>
+              <li>空格：一键到底</li>
+              <li>P：暂停</li>
+              <li>R：重开</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+
+      <section class="touch-controls" aria-label="触屏控制">
+        <button data-action="left" type="button">←</button>
+        <button data-action="rotate" type="button">↻</button>
+        <button data-action="right" type="button">→</button>
+        <button data-action="down" type="button">↓</button>
+        <button data-action="drop" type="button">到底</button>
+        <button data-action="pause" type="button">暂停</button>
+      </section>
+    </section>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>
