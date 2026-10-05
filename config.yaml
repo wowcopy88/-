@@ -1,0 +1,120 @@
+# Clash 配置文件模板
+# 使用说明：
+# 1. 将 proxies 部分替换为你自己的节点信息（服务器地址、端口、密码等）。
+# 2. 如果你使用订阅链接，可以删除 proxies/proxy-groups 中的示例节点，
+#    改用 Clash 客户端的“订阅”功能导入，或在 proxy-providers 中配置订阅地址。
+# 3. rules 部分按常见场景（广告拦截、国内直连、局域网直连、其余走代理）分类，
+#    可以根据需要调整或追加自定义规则。
+
+# 混合代理端口（HTTP + SOCKS5）
+mixed-port: 7890
+
+# 允许局域网内其他设备连接
+allow-lan: false
+
+# 运行模式：rule 基于规则分流，global 全局代理，direct 全部直连
+mode: rule
+
+# 日志级别：silent / error / warning / info / debug
+log-level: info
+
+# 外部控制面板监听地址（留空或注释掉可关闭）
+external-controller: 127.0.0.1:9090
+# 外部控制面板访问密钥（请替换为自己的随机字符串）
+secret: ""
+
+# DNS 配置，使用 DoH/DoT 提升安全性和解析速度
+dns:
+  enable: true
+  ipv6: false
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  fallback:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+
+# 节点列表：请替换为你自己的真实节点信息
+proxies:
+  - name: "示例节点-1"
+    type: ss
+    server: your_server_address
+    port: 443
+    cipher: aes-256-gcm
+    password: "your_password"
+    udp: true
+
+  - name: "示例节点-2"
+    type: vmess
+    server: your_server_address
+    port: 443
+    uuid: "your-uuid"
+    alterId: 0
+    cipher: auto
+    udp: true
+
+# 代理分组：方便按用途切换/自动测速选优
+proxy-groups:
+  - name: 🚀 节点选择
+    type: select
+    proxies:
+      - ♻️ 自动选择
+      - 示例节点-1
+      - 示例节点-2
+      - DIRECT
+
+  - name: ♻️ 自动选择
+    type: url-test
+    proxies:
+      - 示例节点-1
+      - 示例节点-2
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+
+  - name: 🎯 全球直连
+    type: select
+    proxies:
+      - DIRECT
+      - 🚀 节点选择
+
+  - name: 🛑 广告拦截
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+
+  - name: 🐟 漏网之鱼
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - DIRECT
+
+# 分流规则：从上到下依次匹配，未命中的走最后一条兜底规则
+rules:
+  # 广告拦截
+  - DOMAIN-SUFFIX,doubleclick.net,🛑 广告拦截
+  - DOMAIN-KEYWORD,ads,🛑 广告拦截
+
+  # 国内常用域名直连
+  - DOMAIN-SUFFIX,cn,🎯 全球直连
+  - DOMAIN-KEYWORD,baidu,🎯 全球直连
+  - DOMAIN-SUFFIX,qq.com,🎯 全球直连
+
+  # 局域网地址直连
+  - IP-CIDR,192.168.0.0/16,🎯 全球直连,no-resolve
+  - IP-CIDR,10.0.0.0/8,🎯 全球直连,no-resolve
+  - IP-CIDR,172.16.0.0/12,🎯 全球直连,no-resolve
+  - IP-CIDR,127.0.0.0/8,🎯 全球直连,no-resolve
+
+  # 中国大陆 IP 直连
+  - GEOIP,CN,🎯 全球直连
+
+  # 兜底规则：其余流量走节点选择分组
+  - MATCH,🐟 漏网之鱼
